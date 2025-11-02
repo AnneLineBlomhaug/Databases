@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title> DAB - Rent Vehicles</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/styles.css">
+  <script src="../js/common.js"></script>
+
+</head>
+
+<body>
+  <%- include('./partials/navbar.ejs', {user: user}) %>
+  <div class="container-fluid mt-5">
+    <h2 class="p-3 text-center">Vehicles for Rent</h2>
+    <div class="list-group">
+      <div class="row px-3 py-1 w-100 text-center">
+        <span class="col py-1 bg-light">
+          <button class="btn-sm btn-success" onclick="executeQuery(1)">Popular Vehicle Types</button>
+        </span>
+        <span class="col py-1 bg-light">
+          <button class="btn-sm btn-success" onclick="executeQuery(2)">Currently Rented Vehicles</button>
+        </span>
+        <% if (user && user.role === 'admin') { %>
+        <span class="col py-1 bg-light">
+          <button class="btn-sm btn-success" onclick="executeQuery(3)">Vehicles requiring service</button>
+        </span>
+        <% } %>
+        <span class="col py-1 bg-light">
+          <button class="btn-sm btn-success" onclick="executeQuery(4)">Cruise Control</button>
+        </span>
+        <span class="col py-1 bg-light">
+          <button class="btn-sm btn-warning" onclick="executeQuery(5)">All Vehicles</button>
+        </span>
+      </div>
+      <div class="row px-3 py-1 w-100">
+        <span class="col py-1 bg-noroff">Id</span>
+        <span class="col py-1 bg-noroff">Registration No.</span>
+        <span class="col py-1 bg-noroff">Make</span>
+        <span class="col py-1 bg-noroff">Model</span>
+        <span class="col py-1 bg-noroff">Colour</span>
+        <span class="col py-1 bg-noroff">Vehicle Type</span>
+        <span class="col py-1 bg-noroff">Features</span>
+        <span class="col py-1 bg-noroff">Last Service Date</span>
+        <span class="col py-1 bg-noroff">Rented</span>
+        <span class="col py-1 bg-noroff">Serviceable</span>
+        <span class="col py-1 bg-noroff">Options</span>
+      </div>
+      <% vehicles.forEach(function(vehicle) { %>
+      <div class="row px-3 py-1 w-100">
+        <span class="col py-1 bg-light">
+          <%= vehicle.Id %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.RegistrationNo %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.Make %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.Model %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.Colour %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.VehicleType %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.Features %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.LastServiceDate %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.Rented ? 'true' : 'false' %>
+        </span>
+        <span class="col py-1 bg-light">
+          <%= vehicle.Serviceable ? 'true' : 'false' %>
+        </span>
+        <span class="col py-1 bg-light text-center" id="options_<%= vehicle.Id %>">
+          <% if (!vehicle.Rented && user) { %>
+          <button class="btn-sm btn-warning" onclick="rentVehicle(<%= vehicle.Id %>)">Rent</button>
+          <% } else if (user && user.role === 'admin' && vehicle.Rented) { %>
+          <button class="btn-sm btn-danger" onclick="cancelRental(<%= vehicle.Id %>)">Cancel Rental</button>
+          <% } %>
+        </span>
+      </div>
+      <% }); %>
+    </div>
+  </div> 
+</body>
+
+<script>
+  function executeQuery(queryNumber) {
+    let url = '';
+    switch (queryNumber) {
+      case 1:
+        url = '/vehicles/popular-types';
+        break;
+      case 2:
+        url = '/vehicles/currently-rented';
+        break;
+      case 3:
+        url = '/vehicles/needs-service';
+        break;
+      case 4:
+        url = '/vehicles/cruise-control';
+        break;
+      case 5:
+        url = '/vehicles/all';
+        break;
+      default:
+        break;
+    }
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        populateTable(data);
+      })
+      .catch(error => console.error('Error executing query:', error));
+  }
+
+  function populateTable(data) {
+    const tableBody = document.querySelector('.list-group'); // Assuming this is your table body element
+    tableBody.innerHTML = ''; // Clear existing content
+    const headerRow = document.createElement('div');
+    headerRow.classList.add('row', 'px-3', 'py-1', 'w-100');
+    headerRow.innerHTML = `
+      <span class="col py-1 bg-noroff">Id</span>
+      <span class="col py-1 bg-noroff">Registration No.</span>
+      <span class="col py-1 bg-noroff">Make</span>
+      <span class="col py-1 bg-noroff">Model</span>
+      <span class="col py-1 bg-noroff">Colour</span>
+      <span class="col py-1 bg-noroff">Vehicle Type</span>
+      <span class="col py-1 bg-noroff">Features</span>
+      <span class="col py-1 bg-noroff">Last Service Date</span>
+      <span class="col py-1 bg-noroff">Rented</span>
+      <span class="col py-1 bg-noroff">Serviceable</span>
+      <span class="col py-1 bg-noroff">Options</span>`;
+    tableBody.appendChild(headerRow);
+
+    data.forEach(vehicle => {
+      const row = document.createElement('div');
+      row.classList.add('row', 'px-3', 'py-1', 'w-100');
+      row.innerHTML = `
+        <span class="col py-1 bg-light">${vehicle.Id}</span>
+        <span class="col py-1 bg-light">${vehicle.RegistrationNo}</span>
+        <span class="col py-1 bg-light">${vehicle.Make}</span>
+        <span class="col py-1 bg-light">${vehicle.Model}</span>
+        <span class="col py-1 bg-light">${vehicle.Colour}</span>
+        <span class="col py-1 bg-light">${vehicle.VehicleType}</span>
+        <span class="col py-1 bg-light">${vehicle.Features}</span>
+        <span class="col py-1 bg-light">${vehicle.LastServiceDate}</span>
+        <span class="col py-1 bg-light">${vehicle.Rented ? 'true' : 'false'}</span>
+        <span class="col py-1 bg-light">${vehicle.Serviceable ? 'true' : 'false'}</span>
+        <span class="col py-1 bg-light text-center" id="options_${vehicle.Id}">
+          ${vehicle.Rented ? `
+          <% if (user) { %>
+          <button class="btn-sm btn-danger" onclick="cancelRental(${vehicle.Id})">Cancel Rental</button>` :
+          `<button class="btn-sm btn-warning" onclick="rentVehicle(${vehicle.Id})">Rent</button>`}
+          <% } %>
+        </span>`;
+      tableBody.appendChild(row);
+    });
+
+    // Restore filter buttons
+    const filterRow = document.createElement('div');
+    filterRow.classList.add('row', 'px-3', 'py-1', 'w-100', 'text-center');
+    filterRow.innerHTML = `
+      <span class="col py-1 bg-light">
+        <button class="btn-sm btn-success" onclick="executeQuery(1)">Popular Vehicle Types</button>
+      </span>
+      <span class="col py-1 bg-light">
+        <button class="btn-sm btn-success" onclick="executeQuery(2)">Currently Rented Vehicles</button>
+      </span>
+      <% if (user && user.role === 'admin') { %>
+      <span class="col py-1 bg-light">
+        <button class="btn-sm btn-success" onclick="executeQuery(3)">Vehicles requiring service</button>
+      </span>
+      <% } %>
+      <span class="col py-1 bg-light">
+        <button class="btn-sm btn-success" onclick="executeQuery(4)">Cruise Control</button>
+      </span>
+      <span class="col py-1 bg-light">
+        <button class="btn-sm btn-warning" onclick="executeQuery(5)">All Vehicles</button>
+      </span>`;
+    tableBody.insertBefore(filterRow, tableBody.firstChild);
+  }
+
+  function rentVehicle(vehicleId) {
+    fetch(`/vehicles/${vehicleId}/rent`, { method: 'POST' })
+      .then(response => {
+        if (response.ok) {
+          alert('Vehicle rented successfully.');
+          location.reload(); // Refresh page to update rental status
+        } else if (response.status === 400) {
+          response.text().then(message => {
+            alert(message); // Display specific error message
+          });
+        } else {
+          alert('Error renting vehicle.');
+        }
+      })
+      .catch(error => console.error('Error renting vehicle:', error));
+  }
+
+  function cancelRental(vehicleId) {
+    fetch(`/vehicles/${vehicleId}/cancel-rental`, { method: 'PUT' })
+      .then(response => {
+        if (response.ok) {
+          alert('Rental cancelled successfully.');
+          location.reload(); // Refresh page to update rental status
+        } else if (response.status === 403) {
+          response.text().then(message => {
+            alert(message); // Display specific error message (for unauthorized access)
+          });
+        } else if (response.status === 404) {
+          response.text().then(message => {
+            alert(message); // Display specific error message (for not found)
+          });
+        } else {
+          alert('Error cancelling rental.');
+        }
+      })
+      .catch(error => console.error('Error cancelling rental:', error));
+  }
+</script>
+
+</html>

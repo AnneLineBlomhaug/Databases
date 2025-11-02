@@ -1,0 +1,14 @@
+[
+    { "id": 1, "registrationNo": "46875", "make": "Ford", "model": "Fiesta", "colour": "Black", "vehicleType": "Hatchback", "features": "Heated seats, Cruise control", "lastServiceDate": "2024-05-12", "rented": false },
+    { "id": 2, "registrationNo": "79845", "make": "VW", "model": "Golf", "colour": "White", "vehicleType": "Hatchback", "features": "Cruise control", "lastServiceDate": "2024-04-10", "rented": false },
+    { "id": 3, "registrationNo": "75215", "make": "Toyota", "model": "Corolla", "colour": "White", "vehicleType": "Sedan", "features": "Reverse camera, Lane-keep assist", "lastServiceDate": "2024-06-05", "rented": false },
+    { "id": 4, "registrationNo": "52536", "make": "Ford", "model": "Taurus", "colour": "Blue", "vehicleType": "Sedan", "features": "Auto parking, Remote start", "lastServiceDate": "2023-11-28", "rented": false },
+    { "id": 5, "registrationNo": "65643", "make": "Nissan", "model": "Ultima", "colour": "Silver", "vehicleType": "Silver", "features": "Heated seats", "lastServiceDate": "2024-04-10", "rented": false },
+    { "id": 6, "registrationNo": "10235", "make": "Volvo", "model": "XC90", "colour": "White", "vehicleType": "SUV", "features": "Lane-keep assist, Cruise control", "lastServiceDate": "2024-04-10", "rented": false },
+    { "id": 7, "registrationNo": "54865", "make": "VW", "model": "ID.3", "colour": "Green", "vehicleType": "Hatchback", "features": "Quick charge", "lastServiceDate": "2024-05-15", "rented": false },
+    { "id": 8, "registrationNo": "98542", "make": "Ford", "model": "Fiesta", "colour": "Red", "vehicleType": "Hatchback", "features": "Cruise control, Reverse Camera", "lastServiceDate": "2024-06-10", "rented": false },
+    { "id": 9, "registrationNo": "45678", "make": "Ford", "model": "Focus", "colour": "Blue", "vehicleType": "Hatchback", "features": "Cruise control", "lastServiceDate": "2024-06-05", "rented": false },
+    { "id": 10, "registrationNo": "45823", "make": "Toyota", "model": "Corolla", "colour": "White", "vehicleType": "Sedan", "features": "Reverse camera, Heated seats", "lastServiceDate": "2024-02-28", "rented": false },
+    { "id": 11, "registrationNo": "65215", "make": "Audi", "model": "A3", "colour": "Black", "vehicleType": "Sedan", "features": "Auto parking, Heating stearing wheel", "lastServiceDate": "2024-03-12", "rented": false },
+    { "id": 12, "registrationNo": "78947", "make": "Toyota", "model": "Land cruiser", "colour": "Tan", "vehicleType": "SUV", "features": "Remote start", "lastServiceDate": "2024-01-31", "rented": false }
+  ]
